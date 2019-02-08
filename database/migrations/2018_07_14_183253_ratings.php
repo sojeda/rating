@@ -23,6 +23,10 @@ class Ratings extends Migration
             $table->string('rater_type')->nullable();
 
             $table->float('rating', 9, 2);
+            $table->text('comment')->nullable();
+            $table->string('cause')->nullable();
+
+            $table->date('approved_at')->nullable();
 
             $table->timestamps();
         });

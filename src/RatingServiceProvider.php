@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\Rating;
+namespace Laraveles\Rating;
 
 use Illuminate\Support\ServiceProvider;
 

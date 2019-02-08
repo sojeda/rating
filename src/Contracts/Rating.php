@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\Rating\Contracts;
+namespace Laraveles\Rating\Contracts;
 
 interface Rating extends Rateable, Rater
 {

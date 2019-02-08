@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\Rating\Traits;
+namespace Laraveles\Rating\Traits;
 
 trait CanBeRated
 {

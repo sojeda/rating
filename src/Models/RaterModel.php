@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\Rating\Models;
+namespace Laraveles\Rating\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,9 @@ class RaterModel extends Model
     protected $guarded = [];
     protected $casts = [
         'rating' => 'float',
+    ];
+    protected $dates = [
+        'approved_at'
     ];
 
     public function rateable()

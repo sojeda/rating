@@ -1,9 +1,9 @@
 <?php
 
-namespace Rennokki\Rating\Test;
+namespace Laraveles\Rating\Test;
 
-use Rennokki\Rating\Test\Models\Page;
-use Rennokki\Rating\Test\Models\User;
+use Laraveles\Rating\Test\Models\Page;
+use Laraveles\Rating\Test\Models\User;
 
 class RatingTest extends TestCase
 {
@@ -17,11 +17,11 @@ class RatingTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(\Rennokki\Rating\Test\Models\User::class)->create();
-        $this->user2 = factory(\Rennokki\Rating\Test\Models\User::class)->create();
-        $this->user3 = factory(\Rennokki\Rating\Test\Models\User::class)->create();
-        $this->page = factory(\Rennokki\Rating\Test\Models\Page::class)->create();
-        $this->simplePage = factory(\Rennokki\Rating\Test\Models\SimplePage::class)->create();
+        $this->user = factory(\Laraveles\Rating\Test\Models\User::class)->create();
+        $this->user2 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
+        $this->user3 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
+        $this->page = factory(\Laraveles\Rating\Test\Models\Page::class)->create();
+        $this->simplePage = factory(\Laraveles\Rating\Test\Models\SimplePage::class)->create();
     }
 
     public function testNoImplements()

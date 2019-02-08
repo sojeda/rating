@@ -1,10 +1,10 @@
 <?php
 
-namespace Rennokki\Rating\Test\Models;
+namespace Laraveles\Rating\Test\Models;
 
-use Rennokki\Rating\Traits\CanRate;
-use Rennokki\Rating\Contracts\Rating;
-use Rennokki\Rating\Traits\CanBeRated;
+use Laraveles\Rating\Traits\CanRate;
+use Laraveles\Rating\Contracts\Rating;
+use Laraveles\Rating\Traits\CanBeRated;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements Rating

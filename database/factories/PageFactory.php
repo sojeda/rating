@@ -10,7 +10,7 @@
 |
 */
 
-$factory->define(\Rennokki\Rating\Test\Models\Page::class, function () {
+$factory->define(\Laraveles\Rating\Test\Models\Page::class, function () {
     return [
         'name' => 'Page'.str_random(5),
     ];

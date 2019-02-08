@@ -1,12 +1,12 @@
-[![Build Status](https://travis-ci.org/rennokki/rating.svg?branch=master)](https://travis-ci.org/rennokki/rating)
-[![codecov](https://codecov.io/gh/rennokki/rating/branch/master/graph/badge.svg)](https://codecov.io/gh/rennokki/rating/branch/master)
+[![Build Status](https://travis-ci.org/Laraveles/rating.svg?branch=master)](https://travis-ci.org/Laraveles/rating)
+[![codecov](https://codecov.io/gh/Laraveles/rating/branch/master/graph/badge.svg)](https://codecov.io/gh/Laraveles/rating/branch/master)
 [![StyleCI](https://github.styleci.io/repos/142049701/shield?branch=master)](https://github.styleci.io/repos/141194551)
-[![Latest Stable Version](https://poser.pugx.org/rennokki/rating/v/stable)](https://packagist.org/packages/rennokki/rating)
-[![Total Downloads](https://poser.pugx.org/rennokki/rating/downloads)](https://packagist.org/packages/rennokki/rating)
-[![Monthly Downloads](https://poser.pugx.org/rennokki/rating/d/monthly)](https://packagist.org/packages/rennokki/rating)
-[![License](https://poser.pugx.org/rennokki/rating/license)](https://packagist.org/packages/rennokki/rating)
+[![Latest Stable Version](https://poser.pugx.org/Laraveles/rating/v/stable)](https://packagist.org/packages/Laraveles/rating)
+[![Total Downloads](https://poser.pugx.org/Laraveles/rating/downloads)](https://packagist.org/packages/Laraveles/rating)
+[![Monthly Downloads](https://poser.pugx.org/Laraveles/rating/d/monthly)](https://packagist.org/packages/Laraveles/rating)
+[![License](https://poser.pugx.org/Laraveles/rating/license)](https://packagist.org/packages/Laraveles/rating)
 
-[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
+[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/Laraveles)
 
 # Laravel Eloquent Rating
 Laravel Eloquent Rating allows you to assign ratings to any model.
@@ -14,12 +14,12 @@ Laravel Eloquent Rating allows you to assign ratings to any model.
 # Installation
 Install the package:
 ```bash
-$ composer require rennokki/rating
+$ composer require laraveles/rating
 ```
 
 If your Laravel version does not support package discovery, add this line in the `providers` array in your `config/app.php` file:
 ```php
-Rennokki\Rating\RatingServiceProvider::class,
+Laraveles\Rating\RatingServiceProvider::class,
 ```
 
 Publish the config file & migration files:
@@ -35,8 +35,8 @@ $ php artisan migrate
 # Preparing the Model
 To allow a model to rate other models, it should use the `CanRate` trait and implement the  `Rater` contract.
 ```php
-use Rennokki\Rating\Traits\CanRate;
-use Rennokki\Rating\Contracts\Rater;
+use Laraveles\Rating\Traits\CanRate;
+use Laraveles\Rating\Contracts\Rater;
 
 class User extends Model implements Rater {
     use CanRate;
@@ -46,8 +46,8 @@ class User extends Model implements Rater {
 
 The other models that can be rated should use `CanBeRated` trait and `Rateable` contract.
 ```php
-use Rennokki\Rating\Traits\CanBeRated;
-use Rennokki\Rating\Contracts\Rateable;
+use Laraveles\Rating\Traits\CanBeRated;
+use Laraveles\Rating\Contracts\Rateable;
 
 class User extends Model implements Rateable {
     use CanBeRated;
@@ -57,8 +57,8 @@ class User extends Model implements Rateable {
 
 If your model can both rate & be rated by other models, you should use `Rate` trait and `Rating` contract.
 ```php
-use Rennokki\Rating\Traits\Rate;
-use Rennokki\Rating\Contracts\Rating;
+use Laraveles\Rating\Traits\Rate;
+use Laraveles\Rating\Contracts\Rating;
 
 class User extends Model implements Rating {
     use Rate;

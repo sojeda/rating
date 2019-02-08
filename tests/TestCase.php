@@ -1,10 +1,10 @@
 <?php
 
-namespace Rennokki\Rating\Test;
+namespace Laraveles\Rating\Test;
 
-use Rennokki\Rating\Test\Models\User;
-use Rennokki\Rating\Models\RaterModel;
-use Rennokki\Rating\Test\Models\Pages;
+use Laraveles\Rating\Test\Models\User;
+use Laraveles\Rating\Models\RaterModel;
+use Laraveles\Rating\Test\Models\Page;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -26,7 +26,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Rennokki\Rating\RatingServiceProvider::class,
+            \Laraveles\Rating\RatingServiceProvider::class,
         ];
     }
 

@@ -1,9 +1,14 @@
 <?php
 
-namespace Rennokki\Rating\Traits;
+namespace Laraveles\Rating\Traits;
 
-use Rennokki\Rating\Contracts\Rater;
-use Rennokki\Rating\Contracts\Rating;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laraveles\Rating\Contracts\Rater;
+use Laraveles\Rating\Contracts\Rating;
+use Laraveles\Rating\Events\ModelRated;
+use Laraveles\Rating\Events\ModelUnrated;
 
 trait CanRate
 {
@@ -13,12 +18,13 @@ trait CanRate
      * @param Model $model The model types of the results.
      * @return morphToMany The relationship.
      */
-    public function ratings($model = null)
+    public function ratings($model = null): MorphToMany
     {
         return $this->morphToMany(($model) ?: $this->getMorphClass(), 'rater', 'ratings', 'rater_id', 'rateable_id')
-                    ->withPivot('rateable_type', 'rating')
+                    ->withPivot('rateable_type', 'rating', 'comment', 'cause', 'approved_at')
                     ->wherePivot('rateable_type', ($model) ?: $this->getMorphClass())
-                    ->wherePivot('rater_type', $this->getMorphClass());
+                    ->wherePivot('rater_type', $this->getMorphClass())
+                    ->wherePivot('approved_at', '<>', null);
     }
 
     /**
@@ -43,7 +49,7 @@ trait CanRate
      * @param float $rate The rate amount.
      * @return bool
      */
-    public function rate($model, $rating): bool
+    public function rate($model, $rating, string $comment = null, string $cause = null): bool
     {
         if (! $model instanceof Rater && ! $model instanceof Rating) {
             return false;
@@ -58,7 +64,12 @@ trait CanRate
             'rateable_type' => $model->getMorphClass(),
             'rateable_id' => $model->getKey(),
             'rating' => (float) $rating,
+            'comment' => $comment,
+            'cause' => $cause,
+            'approved_at' => config('rating.required_approval') ? null : Carbon::now(),
         ]);
+
+        event(new ModelRated($model));
 
         return true;
     }
@@ -67,8 +78,9 @@ trait CanRate
      * Rate a certain model.
      *
      * @param Model $model The model which will be rated.
-     * @param float $rate The rate amount.
+     * @param $newRating
      * @return bool
+     * @internal param float $rate The rate amount.
      */
     public function updateRatingFor($model, $newRating): bool
     {
@@ -77,7 +89,7 @@ trait CanRate
         }
 
         if (! $this->hasRated($model)) {
-            return $this->rate($mode, $newRating);
+            return $this->rate($model, $newRating);
         }
 
         $this->unrate($model);
@@ -101,6 +113,10 @@ trait CanRate
             return false;
         }
 
-        return (bool) $this->ratings($model->getMorphClass())->detach($model->getKey());
+        $this->ratings($model->getMorphClass())->detach($model->getKey());
+
+        event(new ModelUnrated($model));
+
+        return true;
     }
 }

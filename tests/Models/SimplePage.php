@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\Rating\Test\Models;
+namespace Laraveles\Rating\Test\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

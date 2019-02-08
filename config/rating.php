@@ -7,7 +7,9 @@ return [
      */
 
     'models' => [
-        'rating' => \Rennokki\Rating\Models\RaterModel::class,
+        'rating' => \Laraveles\Rating\Models\RaterModel::class,
     ],
+
+    'required_approval' => true,
 
 ];

@@ -19,6 +19,12 @@
             "email": "rennokki@gmail.com",
             "homepage": "https://twitter.com/rennokki",
             "role": "Developer"
+        },
+        {
+            "name": "Sergio Ojeda",
+            "email": "soj3da@gmail.com",
+            "homepage": "https://twitter.com/soj3da",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -31,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Rennokki\\Rating\\": "src"
+            "Laraveles\\Rating\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Rennokki\\Rating\\Test\\": "tests"
+            "Laraveles\\Rating\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -45,7 +51,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Rennokki\\Rating\\RatingServiceProvider"
+                "Laraveles\\Rating\\RatingServiceProvider"
             ]
         }
     },
