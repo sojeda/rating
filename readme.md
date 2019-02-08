@@ -13,6 +13,17 @@ Laravel Eloquent Rating allows you to assign ratings to any model.
 
 # Installation
 Install the package:
+
+```php
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/sojeda/rating"
+    }
+],
+```
+
+
 ```bash
 $ composer require laraveles/rating
 ```
