@@ -16,15 +16,30 @@ trait CanRate
      * Relationship for models that this model currently rated.
      *
      * @param Model $model The model types of the results.
-     * @return morphToMany The relationship.
+     * @param bool $approved
+     * @return MorphToMany The relationship.
      */
-    public function ratings($model = null): MorphToMany
+    public function ratings($model = null, bool $approved = true): MorphToMany
     {
-        return $this->morphToMany(($model) ?: $this->getMorphClass(), 'rater', 'ratings', 'rater_id', 'rateable_id')
-                    ->withPivot('rateable_type', 'rating', 'comment', 'cause', 'approved_at')
-                    ->wherePivot('rateable_type', ($model) ?: $this->getMorphClass())
-                    ->wherePivot('rater_type', $this->getMorphClass())
-                    ->wherePivot('approved_at', '<>', null);
+        /** @var MorphToMany $morphToMany */
+        $morphToMany = $this->morphToMany(
+            $model ?: $this->getMorphClass(),
+            'rater',
+            'ratings',
+            'rater_id',
+            'rateable_id'
+        );
+
+        if ($approved) {
+            $morphToMany->wherePivot('approved_at', '<>', null);
+        }
+
+        $morphToMany
+            ->withPivot('rateable_type', 'rating', 'comment', 'cause', 'approved_at')
+            ->wherePivot('rateable_type', $model ?: $this->getMorphClass())
+            ->wherePivot('rater_type', $this->getMorphClass());
+
+        return $morphToMany;
     }
 
     /**
@@ -39,15 +54,18 @@ trait CanRate
             return false;
         }
 
-        return (bool) ! is_null($this->ratings($model->getMorphClass())->find($model->getKey()));
+        return $this->ratings($model->getMorphClass(), false)->find($model->getKey()) !== null;
     }
 
     /**
      * Rate a certain model.
      *
      * @param Model $model The model which will be rated.
-     * @param float $rate The rate amount.
+     * @param $rating
+     * @param string|null $comment
+     * @param string|null $cause
      * @return bool
+     * @internal param float $rate The rate amount.
      */
     public function rate($model, $rating, string $comment = null, string $cause = null): bool
     {
