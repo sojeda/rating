@@ -24,7 +24,7 @@ Laraveles\Rating\RatingServiceProvider::class,
 
 Publish the config file & migration files:
 ```bash
-$ php artisan vendor:publish
+$ php artisan vendor:publish --provider='Laraveles\Rating\RatingServiceProvider'
 ```
 
 Migrate the database:

@@ -3,6 +3,7 @@
 namespace Laraveles\Rating\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class RaterModel extends Model
 {
@@ -23,5 +24,15 @@ class RaterModel extends Model
     public function rater()
     {
         return $this->morphTo();
+    }
+
+    public function scopeApproved(Builder $builder)
+    {
+        return $builder->whereNotNull('approved_at');
+    }
+
+    public function scopeNotApproved(Builder $builder)
+    {
+        return $builder->whereNull('approved_at');
     }
 }

@@ -42,6 +42,7 @@ abstract class TestCase extends Orchestra
         $app['config']->set('auth.providers.pages.model', Page::class);
         $app['config']->set('app.key', 'wslxrEFGWY6GfGhvN9L3wH3KSRJQQpBD');
         $app['config']->set('rating.models.rating', RaterModel::class);
+        $app['config']->set('rating.models.required_approval', false);
     }
 
     protected function resetDatabase()
