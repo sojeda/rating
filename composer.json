@@ -1,5 +1,5 @@
 {
-    "name": "rennokki/rating",
+    "name": "laraveles/rating",
     "description": "Laravel Eloquent Rating allows you to assign ratings to any model.",
     "keywords": [
         "eloquent",
@@ -11,7 +11,7 @@
         "star",
         "system"
     ],
-    "homepage": "https://github.com/rennokki/rating",
+    "homepage": "https://github.com/sojeda/rating",
     "license": "MIT",
     "authors": [
         {

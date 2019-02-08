@@ -66,7 +66,7 @@ trait CanRate
             'rating' => (float) $rating,
             'comment' => $comment,
             'cause' => $cause,
-            'approved_at' => config('rating.required_approval') ? null : Carbon::now(),
+            'approved_at' => config('rating.required_approval', false) ? null : Carbon::now(),
         ]);
 
         event(new ModelRated($model));
