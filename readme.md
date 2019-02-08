@@ -116,3 +116,58 @@ $page->raters(User::class)->get(); // Users that have rated this page
 $user->ratings()->get(); // Users that this user has rated
 $user->ratings(Page::class)->get(); // Pages that this user has rated
 ```
+
+## Events
+
+```ModelRated```
+
+You can define your own listeners in your app's EventServiceProvider. E.g.:
+
+```php
+<?php
+
+use Laraveles\Rating\Events\ModelRated;
+use Laraveles\Rating\Events\ModelUnrated;
+
+/**
+ * The event listener mappings for the application.
+ *
+ * @var array
+ */
+protected $listen = [
+    ModelRated::class => [
+        \App\Listeners\MyListenerRating::class,
+    ],
+    ModelUnrated::class => [
+        \App\Listeners\MyListenerUnrating::class,
+    ],
+];
+```
+
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
+## Testing
+
+``` bash
+$ composer test
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Security
+
+If you discover any security related issues, please email soj3da@gmail.com instead of using the issue tracker.
+
+## Credits
+
+- [rennokki](https://github.com/rennokki/rating)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
