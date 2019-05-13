@@ -16,7 +16,8 @@ class Ratings extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('rateable_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('rateable_id');
             $table->string('rateable_type');
 
             $table->integer('rater_id')->nullable();

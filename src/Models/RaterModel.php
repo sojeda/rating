@@ -26,6 +26,11 @@ class RaterModel extends Model
         return $this->morphTo();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(config('rating.models.user'), 'user_id');
+    }
+
     public function scopeApproved(Builder $builder)
     {
         return $builder->whereNotNull('approved_at');

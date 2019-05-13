@@ -62,12 +62,13 @@ trait CanRate
      *
      * @param Model $model The model which will be rated.
      * @param $rating
+     * @param Model $user
      * @param string|null $comment
      * @param string|null $cause
      * @return bool
      * @internal param float $rate The rate amount.
      */
-    public function rate($model, $rating, string $comment = null, string $cause = null): bool
+    public function rate($model, $rating, $user = null, string $comment = null, string $cause = null): bool
     {
         if (! $model instanceof Rater && ! $model instanceof Rating) {
             return false;
@@ -80,6 +81,7 @@ trait CanRate
         $this->ratings()->attach($this->getKey(), [
             'rater_id' => $this->getKey(),
             'rateable_type' => $model->getMorphClass(),
+            'user_id' => $user ? $user->getKey() : null,
             'rateable_id' => $model->getKey(),
             'rating' => (float) $rating,
             'comment' => $comment,
