@@ -78,6 +78,8 @@ trait CanRate
             return false;
         }
 
+        $now = Carbon::now();
+
         $this->ratings()->attach($this->getKey(), [
             'rater_id' => $this->getKey(),
             'rateable_type' => $model->getMorphClass(),
@@ -86,7 +88,9 @@ trait CanRate
             'rating' => (float) $rating,
             'comment' => $comment,
             'cause' => $cause,
-            'approved_at' => config('rating.required_approval', false) ? null : Carbon::now(),
+            'created_at' => $now,
+            'updated_at' => $now,
+            'approved_at' => config('rating.required_approval', false) ? null : $now,
         ]);
 
         event(new ModelRated($model));
