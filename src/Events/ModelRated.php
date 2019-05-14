@@ -15,4 +15,13 @@ class ModelRated
     {
         $this->model = $model;
     }
+
+    /**
+     * @return Model
+     */
+    public function model(): Model
+    {
+        return $this->model;
+    }
+
 }

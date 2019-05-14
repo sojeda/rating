@@ -5,6 +5,7 @@ namespace Laraveles\Rating\Traits;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laraveles\Rating\Contracts\Rateable;
 use Laraveles\Rating\Contracts\Rater;
 use Laraveles\Rating\Contracts\Rating;
 use Laraveles\Rating\Events\ModelRated;
@@ -70,7 +71,7 @@ trait CanRate
      */
     public function rate($model, $rating, $user = null, string $comment = null, string $cause = null): bool
     {
-        if (! $model instanceof Rater && ! $model instanceof Rating) {
+        if (! $this instanceof Rater && ! $model instanceof Rateable) {
             return false;
         }
 
@@ -108,7 +109,7 @@ trait CanRate
      */
     public function updateRatingFor($model, $newRating): bool
     {
-        if (! $model instanceof Rater && ! $model instanceof Rating) {
+        if (! $this instanceof Rater && ! $model instanceof Rateable) {
             return false;
         }
 
