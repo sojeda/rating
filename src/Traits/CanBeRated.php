@@ -10,11 +10,13 @@ trait CanBeRated
     /**
      * Relationship for models that rated this model.
      *
-     * @param Model $model The model types of the results.
+     * @param Model|null $model The model types of the results.
      * @return morphToMany The relationship.
      */
     public function raters($model = null, bool $approved = true)
     {
+        $modelClass = $model ? (new $model)->getMorphClass() : $this->getMorphClass();
+
         /** @var MorphToMany $morphToMany */
         $morphToMany = $this->morphToMany(
             $model ?: $this->getMorphClass(),
@@ -30,7 +32,7 @@ trait CanBeRated
 
         return $morphToMany
                     ->withPivot('rater_type', 'rating', 'comment', 'cause', 'approved_at')
-                    ->wherePivot('rater_type', ($model) ?: $this->getMorphClass())
+                    ->wherePivot('rater_type', $modelClass)
                     ->wherePivot('rateable_type', $this->getMorphClass());
     }
 
@@ -42,7 +44,7 @@ trait CanBeRated
      */
     public function averageRating($model = null): float
     {
-        if ($this->raters($model)->count() == 0) {
+        if ($this->raters($model)->count() === 0) {
             return 0.00;
         }
 

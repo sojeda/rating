@@ -22,6 +22,8 @@ trait CanRate
      */
     public function ratings($model = null, bool $approved = true): MorphToMany
     {
+        $modelClass = $model ? (new $model)->getMorphClass() : $this->getMorphClass();
+
         /** @var MorphToMany $morphToMany */
         $morphToMany = $this->morphToMany(
             $model ?: $this->getMorphClass(),
@@ -37,7 +39,7 @@ trait CanRate
 
         $morphToMany
             ->withPivot('rateable_type', 'rating', 'comment', 'cause', 'approved_at')
-            ->wherePivot('rateable_type', $model ?: $this->getMorphClass())
+            ->wherePivot('rateable_type', $modelClass)
             ->wherePivot('rater_type', $this->getMorphClass());
 
         return $morphToMany;
@@ -100,10 +102,10 @@ trait CanRate
     }
 
     /**
-     * Rate a certain model.
+     * Update the rating for a model.
      *
      * @param Model $model The model which will be rated.
-     * @param $newRating
+     * @param float $newRating
      * @return bool
      * @internal param float $rate The rate amount.
      */
