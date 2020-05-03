@@ -25,10 +25,9 @@ trait HasRate
     /**
      * Calculate the average rating of the current model.
      *
-     * @param Model|null $model
      * @return float The average rating.
      */
-    public function averageMyRating($model = null, bool $onlyApprove = true): float
+    public function averageMyRating(bool $onlyApprove = true): float
     {
         if ($this->myRatings()->count() == 0) {
             return 0.00;

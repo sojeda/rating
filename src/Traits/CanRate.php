@@ -71,7 +71,7 @@ trait CanRate
      */
     public function rate($model, $rating, $user = null, string $comment = null, string $cause = null): bool
     {
-        if (! $this instanceof Rater && ! $model instanceof Rateable) {
+        if (! $this instanceof Rater || ! $model instanceof Rateable) {
             return false;
         }
 

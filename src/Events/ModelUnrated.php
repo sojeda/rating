@@ -6,10 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModelUnrated
 {
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
 
     public function __construct(Model $model)
     {

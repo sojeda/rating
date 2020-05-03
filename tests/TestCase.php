@@ -2,6 +2,7 @@
 
 namespace Laraveles\Rating\Test;
 
+use Laraveles\Rating\RatingServiceProvider;
 use Laraveles\Rating\Test\Models\User;
 use Laraveles\Rating\Models\RaterModel;
 use Laraveles\Rating\Test\Models\Page;
@@ -9,7 +10,7 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +27,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Laraveles\Rating\RatingServiceProvider::class,
+            RatingServiceProvider::class,
         ];
     }
 

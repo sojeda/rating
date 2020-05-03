@@ -3,25 +3,26 @@
 namespace Laraveles\Rating\Test;
 
 use Laraveles\Rating\Test\Models\Page;
+use Laraveles\Rating\Test\Models\SimplePage;
 use Laraveles\Rating\Test\Models\User;
 
 class RatingTest extends TestCase
 {
-    protected $user;
-    protected $user2;
-    protected $user3;
-    protected $page;
-    protected $simplePage;
+    protected User $user;
+    protected User $user2;
+    protected User $user3;
+    protected Page $page;
+    protected SimplePage $simplePage;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->user2 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->user3 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->page = factory(\Laraveles\Rating\Test\Models\Page::class)->create();
-        $this->simplePage = factory(\Laraveles\Rating\Test\Models\SimplePage::class)->create();
+        $this->user = factory(User::class)->create();
+        $this->user2 = factory(User::class)->create();
+        $this->user3 = factory(User::class)->create();
+        $this->page = factory(Page::class)->create();
+        $this->simplePage = factory(SimplePage::class)->create();
     }
 
     public function testNoImplements()
