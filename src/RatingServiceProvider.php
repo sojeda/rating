@@ -14,10 +14,10 @@ class RatingServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
 
-        $this->loadTranslationsFrom(__DIR__ . '/../lang/', 'rating');
+        $this->loadTranslationsFrom(__DIR__.'/../lang/', 'rating');
 
         $this->publishes([
-            __DIR__ . '/../lang/' => resource_path('lang/vendor/rating'),
+            __DIR__.'/../lang/' => resource_path('lang/vendor/rating'),
         ]);
     }
 }

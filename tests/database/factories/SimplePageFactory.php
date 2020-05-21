@@ -14,6 +14,6 @@ use Illuminate\Support\Str;
 
 $factory->define(\Laraveles\Rating\Test\Models\SimplePage::class, function () {
     return [
-        'name' => 'Page'. Str::random(5),
+        'name' => 'Page'.Str::random(5),
     ];
 });

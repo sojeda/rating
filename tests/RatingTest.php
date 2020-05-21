@@ -163,7 +163,6 @@ class RatingTest extends TestCase
         $user2 = factory(User::class)->create();
         $user3 = factory(User::class)->create();
 
-
         $this->assertTrue($user->rate($page, 10.00));
         $this->assertFalse($user->rate($page, 10.00));
         $this->assertTrue($user->hasRated($page));
