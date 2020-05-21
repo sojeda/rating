@@ -128,7 +128,7 @@ class RatingTest extends TestCase
         /** @var Page $page */
         $page = factory(Page::class)->create();
 
-       $this->assertTrue($user->updateRatingFor($page, 1.00));
+        $this->assertTrue($user->updateRatingFor($page, 1.00));
         $this->assertEquals(1.00, $page->averageRating());
     }
 
