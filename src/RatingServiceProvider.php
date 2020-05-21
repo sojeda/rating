@@ -6,29 +6,18 @@ use Illuminate\Support\ServiceProvider;
 
 class RatingServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__.'/../config/rating.php' => config_path('rating.php'),
         ], 'config');
 
-        $this->publishes([
-            __DIR__.'/../database/migrations/2018_07_14_183253_ratings.php' => database_path('migrations/2018_07_14_183253_ratings.php'),
-        ], 'migration');
-    }
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
 
-    /**
-     * Register bindings in the container.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
+        $this->loadTranslationsFrom(__DIR__ . '/../lang/', 'rating');
+
+        $this->publishes([
+            __DIR__ . '/../lang/' => resource_path('lang/vendor/rating'),
+        ]);
     }
 }

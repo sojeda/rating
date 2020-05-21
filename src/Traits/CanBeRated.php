@@ -3,18 +3,22 @@
 namespace Laraveles\Rating\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laraveles\Rating\Contracts\Qualifier;
 
 trait CanBeRated
 {
     /**
      * Relationship for models that rated this model.
      *
-     * @param Model $model The model types of the results.
+     * @param Model|null $model The model types of the results.
      * @return morphToMany The relationship.
      */
     public function raters($model = null, bool $approved = true)
     {
+        $modelClass = $model ? (new $model)->getMorphClass() : $this->getMorphClass();
+
         /** @var MorphToMany $morphToMany */
         $morphToMany = $this->morphToMany(
             $model ?: $this->getMorphClass(),
@@ -29,23 +33,50 @@ trait CanBeRated
         }
 
         return $morphToMany
-                    ->withPivot('rater_type', 'rating', 'comment', 'cause', 'approved_at')
-                    ->wherePivot('rater_type', ($model) ?: $this->getMorphClass())
+                    ->withPivot('rater_type', 'score', 'comment', 'cause', 'approved_at')
+                    ->wherePivot('rater_type', $modelClass)
                     ->wherePivot('rateable_type', $this->getMorphClass());
     }
 
     /**
-     * Calculate the average rating of the current model.
-     *
-     * @param Model|null $model
-     * @return float The average rating.
+     * @param string|null $modelType
+     * @param bool $approved
+     * @return HasMany
      */
-    public function averageRating($model = null): float
+    public function qualifications(string $modelType = null, bool $approved = false): HasMany
     {
-        if ($this->raters($model)->count() == 0) {
-            return 0.00;
+        $hasMany = $this->hasMany(config('rating.models.rating'), 'rateable_id');
+
+        if ($modelType) {
+            $hasMany->where('rater_type', $modelType);
         }
 
-        return (float) $this->raters($model)->avg('rating');
+        if ($approved) {
+            $hasMany->whereNotNull('approved_at');
+        }
+
+        return $hasMany
+            ->where('rateable_type', $this->getMorphClass());
+    }
+
+    /**
+     * @param Qualifier|Model $model
+     * @return bool
+     */
+    public function hasRateBy(Qualifier $model): bool
+    {
+        return $this->qualifications()
+            ->where('rater_id', $model->getKey())
+            ->where('rater_type', get_class($model))
+            ->exists();
+    }
+
+    /**
+     * @param string|null $modelType
+     * @return float
+     */
+    public function averageRating(string $modelType = null): float
+    {
+        return $this->qualifications($modelType)->avg('score') ?: 0.0;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Laraveles\Rating\Test\Models;
 
-use Laraveles\Rating\Traits\CanRate;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laraveles\Rating\Contracts\Rating;
 use Laraveles\Rating\Traits\CanBeRated;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laraveles\Rating\Traits\CanRate;
 
 class User extends Authenticatable implements Rating
 {
@@ -18,4 +18,9 @@ class User extends Authenticatable implements Rating
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function name(): string
+    {
+        return $this->name;
+    }
 }

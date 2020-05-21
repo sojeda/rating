@@ -4,7 +4,13 @@ namespace Laraveles\Rating\Contracts;
 
 interface Rateable
 {
-    public function raters($model = null);
+    public function averageRating(): float;
 
-    public function averageRating();
+    public function getKey();
+
+    public function name(): string;
+
+    public function qualifications();
+
+    public function hasRateBy(Qualifier $model): bool;
 }

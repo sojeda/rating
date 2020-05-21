@@ -6,12 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class Ratings extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->increments('id');
@@ -23,8 +18,8 @@ class Ratings extends Migration
             $table->integer('rater_id')->nullable();
             $table->string('rater_type')->nullable();
 
-            $table->float('rating', 9, 2);
-            $table->text('comment')->nullable();
+            $table->float('score', 9, 2);
+            $table->text('comments')->nullable();
             $table->string('cause')->nullable();
 
             $table->date('approved_at')->nullable();
@@ -33,12 +28,7 @@ class Ratings extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('ratings');
     }

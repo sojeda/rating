@@ -2,211 +2,195 @@
 
 namespace Laraveles\Rating\Test;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Laraveles\Rating\Events\ModelRated;
+use Laraveles\Rating\Events\ModelUnrated;
+use Laraveles\Rating\Exception\InvalidScoreRating;
 use Laraveles\Rating\Test\Models\Page;
+use Laraveles\Rating\Test\Models\SimplePage;
 use Laraveles\Rating\Test\Models\User;
 
 class RatingTest extends TestCase
 {
-    protected $user;
-    protected $user2;
-    protected $user3;
-    protected $page;
-    protected $simplePage;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->user = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->user2 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->user3 = factory(\Laraveles\Rating\Test\Models\User::class)->create();
-        $this->page = factory(\Laraveles\Rating\Test\Models\Page::class)->create();
-        $this->simplePage = factory(\Laraveles\Rating\Test\Models\SimplePage::class)->create();
-    }
+    use RefreshDatabase;
 
     public function testNoImplements()
     {
-        $this->assertFalse($this->user->rate($this->simplePage, 10.00));
-        $this->assertFalse($this->user->unrate($this->simplePage));
-        $this->assertFalse($this->user->hasRated($this->simplePage));
+        $this->expectException(\TypeError::class);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(SimplePage::class)->create();
+
+        $user->rate($page, 5);
     }
 
-    public function testNoRatersOrRating()
+    public function test_rate_product()
     {
-        $this->assertEquals($this->user->ratings()->count(), 0);
-        $this->assertEquals($this->user->raters()->count(), 0);
+        Event::fake();
 
-        $this->assertEquals($this->user2->ratings()->count(), 0);
-        $this->assertEquals($this->user2->raters()->count(), 0);
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
 
-        $this->assertEquals($this->user3->ratings()->count(), 0);
-        $this->assertEquals($this->user3->raters()->count(), 0);
+        $result = $user->rate($page, 5);
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+        $this->assertEquals(1, $page->qualifications()->count());
+
+        Event::assertDispatched(ModelRated::class, function (ModelRated $event) use ($page) {
+            return $event->getModel()->getKey() === $page->id;
+        });
     }
 
-    public function testRateUser()
+    public function test_rate_product_has_rate()
     {
-        $this->assertTrue($this->user->rate($this->user2, 10.00));
+        Event::fake();
 
-        $this->assertFalse($this->user->rate($this->user2, 10.00));
-        $this->assertTrue($this->user->hasRated($this->user2));
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
 
-        $this->assertTrue($this->user2->rate($this->user3, 5.00));
-        $this->assertFalse($this->user2->rate($this->user3, 10.00));
-        $this->assertTrue($this->user2->hasRated($this->user3));
+        $user->rate($page, 5);
+        $user->rate($page, 4);
+        $result = $user->rate($page, 5);
 
-        $this->assertFalse($this->user->hasRated($this->user3));
-        $this->assertFalse($this->user3->hasRated($this->user2));
+        $this->assertIsBool($result);
+        $this->assertFalse($result);
+        $this->assertEquals(1, $page->qualifications()->count());
 
-        $this->assertEquals($this->user->ratings()->count(), 1);
-        $this->assertEquals($this->user->raters()->count(), 0);
-        $this->assertEquals($this->user2->ratings()->count(), 1);
-        $this->assertEquals($this->user2->raters()->count(), 1);
-        $this->assertEquals($this->user3->ratings()->count(), 0);
-        $this->assertEquals($this->user3->raters()->count(), 1);
+        Event::assertDispatchedTimes(ModelRated::class, 1);
     }
 
-    public function testUnrateUser()
+    public function test_unrate_product()
     {
-        $this->assertFalse($this->user->unrate($this->user2));
+        Event::fake();
 
-        $this->assertTrue($this->user->rate($this->user2, 10.00));
-        $this->assertTrue($this->user->unrate($this->user2));
-        $this->assertFalse($this->user->hasRated($this->user2));
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
 
-        $this->assertEquals($this->user->ratings()->count(), 0);
-        $this->assertEquals($this->user->raters()->count(), 0);
-        $this->assertEquals($this->user2->ratings()->count(), 0);
-        $this->assertEquals($this->user2->raters()->count(), 0);
+        $user->rate($page, 5);
+        $result = $user->unrate($page);
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+
+        Event::assertDispatched(ModelUnrated::class, function (ModelUnrated $event) use ($page) {
+            return $event->getModel()->getKey() === $page->id;
+        });
+    }
+
+    public function test_unrate_product_has_not_rate()
+    {
+        Event::fake();
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $result = $user->unrate($page);
+
+        $this->assertIsBool($result);
+        $this->assertFalse($result);
+        $this->assertEquals(0, $page->qualifications()->count());
+
+        Event::assertNotDispatched(ModelUnrated::class);
     }
 
     public function testUpdateRating()
     {
-        $this->assertTrue($this->user->rate($this->user2, 10.00));
-        $this->assertEquals($this->user2->averageRating(), 10.00);
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
 
-        $this->assertTrue($this->user->updateRatingFor($this->user2, 1.00));
-        $this->assertEquals($this->user2->averageRating(), 1.00);
+        $this->assertTrue($user->rate($page, 10.00));
+        $this->assertEquals(10.00, $page->averageRating());
+
+        $this->assertTrue($user->updateRatingFor($page, 1.00));
+        $this->assertEquals(1.00, $page->averageRating());
+    }
+
+    public function test_product_doesnt_have_rates()
+    {
+        /** @var Page $product */
+        $product = factory(Page::class)->create();
+
+        $this->assertEquals(0.0, $product->averageRating());
+    }
+
+    public function test_average_rating()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var User $user2 */
+        $user2 = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $user->rate($page, 5);
+        $user2->rate($page, 3);
+
+        $this->assertEquals(4, $page->averageRating());
+    }
+
+    public function test_rate_product_with_invalid_score()
+    {
+        $this->expectException(InvalidScoreRating::class);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $user->rate($page, 15);
     }
 
     public function testRateOtherModel()
     {
-        $this->assertTrue($this->user->rate($this->page, 10.00));
-        $this->assertFalse($this->user->rate($this->page, 10.00));
-        $this->assertTrue($this->user->hasRated($this->page));
+        $page = factory(Page::class)->create();
+        $user = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
 
-        $this->assertTrue($this->user2->rate($this->page, 7.00));
-        $this->assertTrue($this->user3->rate($this->page, 5.00));
 
-        $this->assertFalse($this->page->hasRated($this->user));
-        $this->assertFalse($this->page->hasRated($this->user2));
-        $this->assertFalse($this->page->hasRated($this->user3));
+        $this->assertTrue($user->rate($page, 10.00));
+        $this->assertFalse($user->rate($page, 10.00));
+        $this->assertTrue($user->hasRated($page));
 
-        $this->assertEquals($this->page->ratings()->count(), 0);
-        $this->assertEquals($this->page->raters()->count(), 0);
-        $this->assertEquals($this->page->ratings(User::class)->count(), 0);
-        $this->assertEquals($this->page->raters(User::class)->count(), 3);
+        $this->assertTrue($user2->rate($page, 7.00));
+        $this->assertTrue($user3->rate($page, 5.00));
 
-        $this->assertEquals($this->user->ratings()->count(), 0);
-        $this->assertEquals($this->user->raters()->count(), 0);
-        $this->assertEquals($this->user->ratings(Page::class)->count(), 1);
-        $this->assertEquals($this->user->raters(Page::class)->count(), 0);
+        $this->assertFalse($page->hasRated($user));
+        $this->assertFalse($page->hasRated($user2));
+        $this->assertFalse($page->hasRated($user3));
 
-        $this->assertEquals($this->user2->ratings()->count(), 0);
-        $this->assertEquals($this->user2->raters()->count(), 0);
-        $this->assertEquals($this->user2->ratings(Page::class)->count(), 1);
-        $this->assertEquals($this->user2->raters(Page::class)->count(), 0);
+        $this->assertEquals(0, $page->ratings()->count());
+        $this->assertEquals(0, $page->raters()->count());
+        $this->assertEquals(0, $page->ratings(User::class)->count());
+        $this->assertEquals(3, $page->raters(User::class)->count());
 
-        $this->assertEquals($this->user3->ratings()->count(), 0);
-        $this->assertEquals($this->user3->raters()->count(), 0);
-        $this->assertEquals($this->user3->ratings(Page::class)->count(), 1);
-        $this->assertEquals($this->user3->raters(Page::class)->count(), 0);
-    }
+        $this->assertEquals(0, $user->ratings()->count());
+        $this->assertEquals(0, $user->raters()->count());
+        $this->assertEquals(1, $user->ratings(Page::class)->count());
+        $this->assertEquals(0, $user->raters(Page::class)->count());
 
-    public function testUnrateOtherModel()
-    {
-        $this->assertFalse($this->user->unrate($this->page));
+        $this->assertEquals(0, $user2->ratings()->count());
+        $this->assertEquals(0, $user2->raters()->count());
+        $this->assertEquals(1, $user2->ratings(Page::class)->count());
+        $this->assertEquals(0, $user2->raters(Page::class)->count());
 
-        $this->assertTrue($this->user->rate($this->page, 10.00));
-        $this->assertTrue($this->user->unrate($this->page));
-        $this->assertFalse($this->user->hasRated($this->page));
-
-        $this->assertEquals($this->user->ratings()->count(), 0);
-        $this->assertEquals($this->user->raters()->count(), 0);
-        $this->assertEquals($this->user->ratings(Page::class)->count(), 0);
-        $this->assertEquals($this->user->raters(Page::class)->count(), 0);
-        $this->assertEquals($this->page->ratings()->count(), 0);
-        $this->assertEquals($this->page->raters()->count(), 0);
-        $this->assertEquals($this->page->ratings(User::class)->count(), 0);
-        $this->assertEquals($this->page->raters(User::class)->count(), 0);
-    }
-
-    public function testUpdateRatingForOtherModel()
-    {
-        $this->assertTrue($this->user->rate($this->page, 10.00));
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 10.00);
-
-        $this->assertTrue($this->user->updateRatingFor($this->page, 1.00));
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 1.00);
-    }
-
-    public function testAverageRating1()
-    {
-        $this->user->rate($this->page, 10.00);
-        $this->user2->rate($this->page, 10.00);
-        $this->user3->rate($this->page, 10.00);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 10.00);
-    }
-
-    public function testAverageRating2()
-    {
-        $this->user->rate($this->page, 1.00);
-        $this->user2->rate($this->page, 1.00);
-        $this->user3->rate($this->page, 1.00);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 1.00);
-    }
-
-    public function testAverageRating3()
-    {
-        $this->user->rate($this->page, 1.00);
-        $this->user2->rate($this->page, 2.00);
-        $this->user3->rate($this->page, 3.00);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 2.00);
-    }
-
-    public function testAverageRating4()
-    {
-        $this->user->rate($this->page, 1.00);
-        $this->user2->rate($this->page, 2.00);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), 1.50);
-    }
-
-    public function testAverageRating5()
-    {
-        $this->user->rate($this->page, 1.00);
-        $this->user2->rate($this->page, 1.00);
-        $this->user3->rate($this->page, 10.00);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), (12.00 / 3));
-    }
-
-    public function testAverageRating6()
-    {
-        $this->user->rate($this->page, 7.43);
-        $this->user2->rate($this->page, 3.15);
-        $this->user3->rate($this->page, 5.77);
-
-        $this->assertEquals($this->page->averageRating(), 0.00);
-        $this->assertEquals($this->page->averageRating(User::class), ((7.43 + 3.15 + 5.77) / 3));
+        $this->assertEquals(0, $user3->ratings()->count());
+        $this->assertEquals(0, $user3->raters()->count());
+        $this->assertEquals(1, $user3->ratings(Page::class)->count());
+        $this->assertEquals(0, $user3->raters(Page::class)->count());
     }
 }
