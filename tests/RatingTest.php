@@ -121,6 +121,17 @@ class RatingTest extends TestCase
         $this->assertEquals(1.00, $page->averageRating());
     }
 
+    public function test_update_rating_model_unrated()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+       $this->assertTrue($user->updateRatingFor($page, 1.00));
+        $this->assertEquals(1.00, $page->averageRating());
+    }
+
     public function test_product_doesnt_have_rates()
     {
         /** @var Page $product */
@@ -302,7 +313,7 @@ class RatingTest extends TestCase
         $this->assertEquals(2, $ratings);
     }
 
-    public function test_get_qualifers_and_ratables_models_from_rating()
+    public function test_get_qualifers_and_rateables_models_from_rating()
     {
         /** @var User $user */
         $user = factory(User::class)->create();
@@ -315,5 +326,20 @@ class RatingTest extends TestCase
 
         $this->assertInstanceOf(Page::class, $rating->rateable()->first());
         $this->assertInstanceOf(User::class, $rating->rater()->first());
+    }
+
+    public function test_get_approved_rateables_models_from_qualifer()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+
+        $rating = Rating::first();
+        $rating->approve();
+        $rating->save();
+
+        $this->assertInstanceOf(Page::class, $user->ratings(Page::class, true)->first());
     }
 }
