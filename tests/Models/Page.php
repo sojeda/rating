@@ -2,10 +2,10 @@
 
 namespace Laraveles\Rating\Test\Models;
 
-use Laraveles\Rating\Traits\CanRate;
+use Illuminate\Database\Eloquent\Model;
 use Laraveles\Rating\Contracts\Rating;
 use Laraveles\Rating\Traits\CanBeRated;
-use Illuminate\Database\Eloquent\Model;
+use Laraveles\Rating\Traits\CanRate;
 
 class Page extends Model implements Rating
 {
@@ -14,4 +14,9 @@ class Page extends Model implements Rating
     protected $fillable = [
         'name',
     ];
+
+    public function name(): string
+    {
+        return $this->name;
+    }
 }

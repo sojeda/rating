@@ -4,20 +4,13 @@ namespace Laraveles\Rating\Contracts;
 
 interface Rateable
 {
+    public function averageRating(): float;
 
-    /**
-     * Relationship for models that rated this model.
-     *
-     * @param  null|\Illuminate\Database\Eloquent\Model  $model
-     * @return mixed
-     */
-    public function raters($model = null);
+    public function getKey();
 
-    /**
-     * Calculate the average rating of the current model.
-     *
-     * @param  null|\Illuminate\Database\Eloquent\Model  $model
-     * @return float
-     */
-    public function averageRating();
+    public function name(): string;
+
+    public function qualifications();
+
+    public function hasRateBy(Qualifier $model): bool;
 }

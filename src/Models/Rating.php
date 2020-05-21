@@ -2,12 +2,10 @@
 
 namespace Laraveles\Rating\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Query\Builder;
 
-class RaterModel extends Model
+class Rating extends Pivot
 {
     protected $table = 'ratings';
     protected $guarded = [];
@@ -15,22 +13,17 @@ class RaterModel extends Model
         'rating' => 'float',
     ];
     protected $dates = [
-        'approved_at'
+        'approved_at',
     ];
 
-    public function rateable(): MorphTo
+    public function rateable()
     {
         return $this->morphTo();
     }
 
-    public function rater(): MorphTo
+    public function rater()
     {
         return $this->morphTo();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(config('rating.models.user'), 'user_id');
     }
 
     public function scopeApproved(Builder $builder): Builder

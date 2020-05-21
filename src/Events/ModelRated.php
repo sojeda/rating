@@ -2,18 +2,22 @@
 
 namespace Laraveles\Rating\Events;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+use Laraveles\Rating\Contracts\Rateable;
 
 class ModelRated
 {
-    private Model $model;
+    use Dispatchable, SerializesModels;
 
-    public function __construct(Model $model)
+    private Rateable $model;
+
+    public function __construct(Rateable $model)
     {
         $this->model = $model;
     }
 
-    public function model(): Model
+    public function getModel(): Rateable
     {
         return $this->model;
     }

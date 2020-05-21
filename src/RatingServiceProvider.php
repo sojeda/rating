@@ -12,8 +12,12 @@ class RatingServiceProvider extends ServiceProvider
             __DIR__.'/../config/rating.php' => config_path('rating.php'),
         ], 'config');
 
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
+
+        $this->loadTranslationsFrom(__DIR__ . '/../lang/', 'rating');
+
         $this->publishes([
-            __DIR__.'/../database/migrations/2018_07_14_183253_ratings.php' => database_path('migrations/2018_07_14_183253_ratings.php'),
-        ], 'migration');
+            __DIR__ . '/../lang/' => resource_path('lang/vendor/rating'),
+        ]);
     }
 }

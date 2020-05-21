@@ -2,7 +2,7 @@
 
 namespace Laraveles\Rating\Contracts;
 
-interface Rating extends Rateable, Rater
+interface Rating extends Rateable, Qualifier
 {
     //
 }
