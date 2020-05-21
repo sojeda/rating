@@ -27,11 +27,6 @@ class Rating extends Pivot
         return $this->morphTo();
     }
 
-    public function name(): string
-    {
-        return $this->name;
-    }
-
     public function approve()
     {
         $this->approved_at = Carbon::now();
