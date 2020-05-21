@@ -1,12 +1,9 @@
-[![Build Status](https://travis-ci.org/Laraveles/rating.svg?branch=master)](https://travis-ci.org/Laraveles/rating)
-[![codecov](https://codecov.io/gh/Laraveles/rating/branch/master/graph/badge.svg)](https://codecov.io/gh/Laraveles/rating/branch/master)
-[![StyleCI](https://github.styleci.io/repos/142049701/shield?branch=master)](https://github.styleci.io/repos/141194551)
-[![Latest Stable Version](https://poser.pugx.org/Laraveles/rating/v/stable)](https://packagist.org/packages/Laraveles/rating)
-[![Total Downloads](https://poser.pugx.org/Laraveles/rating/downloads)](https://packagist.org/packages/Laraveles/rating)
-[![Monthly Downloads](https://poser.pugx.org/Laraveles/rating/d/monthly)](https://packagist.org/packages/Laraveles/rating)
-[![License](https://poser.pugx.org/Laraveles/rating/license)](https://packagist.org/packages/Laraveles/rating)
-
-[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/Laraveles)
+[![Latest Stable Version](https://poser.pugx.org/phpunit/phpunit/v)](//packagist.org/packages/phpunit/phpunit) 
+[![Total Downloads](https://poser.pugx.org/phpunit/phpunit/downloads)](//packagist.org/packages/phpunit/phpunit) 
+[![Latest Unstable Version](https://poser.pugx.org/phpunit/phpunit/v/unstable)](//packagist.org/packages/phpunit/phpunit) 
+[![License](https://poser.pugx.org/phpunit/phpunit/license)](//packagist.org/packages/phpunit/phpunit)
+[![StyleCI](https://github.styleci.io/repos/169777193/shield?branch=master)](https://github.styleci.io/repos/141194551)
+[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/soj3da)
 
 # Laravel Eloquent Rating
 Laravel Eloquent Rating allows you to assign ratings to any model.
@@ -14,18 +11,8 @@ Laravel Eloquent Rating allows you to assign ratings to any model.
 # Installation
 Install the package:
 
-```php
-"repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/sojeda/rating"
-    }
-],
-```
-
-
 ```bash
-$ composer require laraveles/rating
+$ composer require sojeda/rating
 ```
 
 If your Laravel version does not support package discovery, add this line in the `providers` array in your `config/app.php` file:
@@ -47,9 +34,9 @@ $ php artisan migrate
 To allow a model to rate other models, it should use the `CanRate` trait and implement the  `Qualifier` contract.
 ```php
 use Laraveles\Rating\Traits\CanRate;
-use Laraveles\Rating\Contracts\Rater;
+use Laraveles\Rating\Contracts\Qualifier;
 
-class User extends Model implements \Laraveles\Rating\Contracts\Qualifier {
+class User extends Model implements Qualifier {
     use CanRate;
     ...
 }
