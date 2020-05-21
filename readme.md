@@ -3,6 +3,8 @@
 [![Latest Unstable Version](https://poser.pugx.org/sojeda/rating/v/unstable)](//packagist.org/packages/sojeda/rating) 
 [![License](https://poser.pugx.org/sojeda/rating/license)](//packagist.org/packages/sojeda/rating)
 [![StyleCI](https://github.styleci.io/repos/169777193/shield?branch=master)](https://github.styleci.io/repos/141194551)
+[![codecov](https://codecov.io/gh/sojeda/rating/branch/master/graph/badge.svg)](https://codecov.io/gh/sojeda/rating)
+
 [![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/soj3da)
 
 # Laravel Eloquent Rating
