@@ -2,6 +2,7 @@
 
 namespace Laraveles\Rating\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Query\Builder;
 
@@ -24,6 +25,16 @@ class Rating extends Pivot
     public function rater()
     {
         return $this->morphTo();
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function approve()
+    {
+        $this->approved_at = Carbon::now();
     }
 
     public function scopeApproved(Builder $builder): Builder

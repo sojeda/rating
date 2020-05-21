@@ -33,7 +33,7 @@ trait CanBeRated
         }
 
         return $morphToMany
-                    ->withPivot('rater_type', 'score', 'comment', 'cause', 'approved_at')
+                    ->withPivot('rater_type', 'score', 'comments', 'approved_at')
                     ->wherePivot('rater_type', $modelClass)
                     ->wherePivot('rateable_type', $this->getMorphClass());
     }
@@ -75,8 +75,8 @@ trait CanBeRated
      * @param string|null $modelType
      * @return float
      */
-    public function averageRating(string $modelType = null): float
+    public function averageRating(string $modelType = null, bool $approved = false): float
     {
-        return $this->qualifications($modelType)->avg('score') ?: 0.0;
+        return $this->qualifications($modelType, $approved)->avg('score') ?: 0.0;
     }
 }
