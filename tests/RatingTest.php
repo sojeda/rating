@@ -2,11 +2,13 @@
 
 namespace Laraveles\Rating\Test;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Laraveles\Rating\Events\ModelRated;
 use Laraveles\Rating\Events\ModelUnrated;
 use Laraveles\Rating\Exception\InvalidScoreRating;
+use Laraveles\Rating\Models\Rating;
 use Laraveles\Rating\Test\Models\Page;
 use Laraveles\Rating\Test\Models\SimplePage;
 use Laraveles\Rating\Test\Models\User;
@@ -154,7 +156,7 @@ class RatingTest extends TestCase
         $user->rate($page, 15);
     }
 
-    public function testRateOtherModel()
+    public function test_rate_other_model()
     {
         $page = factory(Page::class)->create();
         $user = factory(User::class)->create();
@@ -192,5 +194,63 @@ class RatingTest extends TestCase
         $this->assertEquals(0, $user3->raters()->count());
         $this->assertEquals(1, $user3->ratings(Page::class)->count());
         $this->assertEquals(0, $user3->raters(Page::class)->count());
+    }
+
+    public function test_average_rating_with_required_approval()
+    {
+        config()->set('rating.required_approval', true);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $user->rate($page, 5);
+
+        $this->assertEquals(0, $page->averageRating(User::class, true));
+    }
+
+    public function test_rateable_model_with_required_approval()
+    {
+        config()->set('rating.required_approval', true);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $user->rate($page, 5);
+
+        $page = $user->ratings($page)->first();
+        $this->assertNull($page->rating->approved_at);
+    }
+
+    public function test_rateable_model_without_required_approval()
+    {
+        config()->set('rating.required_approval', false);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+
+        $user->rate($page, 5);
+
+        $page = $user->ratings($page)->first();
+        $this->assertNotNull($page->rating->approved_at);
+    }
+
+    public function test_approve_model_rating()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+
+        $rating = Rating::first();
+        $rating->approve();
+
+        $this->assertInstanceOf(Carbon::class, $rating->approved_at);
     }
 }
