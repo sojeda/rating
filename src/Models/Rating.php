@@ -3,8 +3,8 @@
 namespace Laraveles\Rating\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Database\Query\Builder;
 
 class Rating extends Pivot
 {

@@ -252,4 +252,68 @@ class RatingTest extends TestCase
 
         $this->assertInstanceOf(Carbon::class, $rating->approved_at);
     }
+
+    public function test_has_rate_by_model()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+
+        $this->assertTrue($page->hasRateBy($user));
+    }
+
+    public function test_ratings_approved()
+    {
+        config()->set('rating.required_approval', true);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var User $user */
+        $user2 = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+        $user2->rate($page, 5);
+
+        $rating = Rating::first();
+        $rating->approve();
+        $rating->save();
+
+        $ratings = Rating::approved()->count();
+        $this->assertEquals(1, $ratings);
+    }
+
+    public function test_ratings_not_approved()
+    {
+        config()->set('rating.required_approval', true);
+
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var User $user */
+        $user2 = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+        $user2->rate($page, 5);
+
+        $ratings = Rating::notApproved()->count();
+        $this->assertEquals(2, $ratings);
+    }
+
+    public function test_get_qualifers_and_ratables_models_from_rating()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+
+        /** @var Rating $rating */
+        $rating = Rating::first();
+
+        $this->assertInstanceOf(Page::class, $rating->rateable()->first());
+        $this->assertInstanceOf(User::class, $rating->rater()->first());
+    }
 }
