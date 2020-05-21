@@ -342,4 +342,15 @@ class RatingTest extends TestCase
 
         $this->assertInstanceOf(Page::class, $user->ratings(Page::class, true)->first());
     }
+
+    public function test_get_name_from_a_model()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Page $page */
+        $page = factory(Page::class)->create();
+        $user->rate($page, 5);
+
+        $this->assertEquals($user->name, $user->name());
+    }
 }
