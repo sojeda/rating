@@ -1,7 +1,7 @@
-[![Latest Stable Version](https://poser.pugx.org/phpunit/phpunit/v)](//packagist.org/packages/phpunit/phpunit) 
-[![Total Downloads](https://poser.pugx.org/phpunit/phpunit/downloads)](//packagist.org/packages/phpunit/phpunit) 
-[![Latest Unstable Version](https://poser.pugx.org/phpunit/phpunit/v/unstable)](//packagist.org/packages/phpunit/phpunit) 
-[![License](https://poser.pugx.org/phpunit/phpunit/license)](//packagist.org/packages/phpunit/phpunit)
+[![Latest Stable Version](https://poser.pugx.org/sojeda/rating/v)](//packagist.org/packages/sojeda/rating) 
+[![Total Downloads](https://poser.pugx.org/sojeda/rating/downloads)](//packagist.org/packages/sojeda/rating) 
+[![Latest Unstable Version](https://poser.pugx.org/sojeda/rating/v/unstable)](//packagist.org/packages/sojeda/rating) 
+[![License](https://poser.pugx.org/sojeda/rating/license)](//packagist.org/packages/sojeda/rating)
 [![StyleCI](https://github.styleci.io/repos/169777193/shield?branch=master)](https://github.styleci.io/repos/141194551)
 [![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/soj3da)
 
