@@ -44,12 +44,12 @@ $ php artisan migrate
 ```
 
 # Preparing the Model
-To allow a model to rate other models, it should use the `CanRate` trait and implement the  `Rater` contract.
+To allow a model to rate other models, it should use the `CanRate` trait and implement the  `Qualifier` contract.
 ```php
 use Laraveles\Rating\Traits\CanRate;
 use Laraveles\Rating\Contracts\Rater;
 
-class User extends Model implements Rater {
+class User extends Model implements \Laraveles\Rating\Contracts\Qualifier {
     use CanRate;
     ...
 }
