@@ -22,9 +22,9 @@ trait CanRate
 
         $morphToMany = $this->morphToMany(
             $modelClass,
-            'rater',
+            'qualifier',
             'ratings',
-            'rater_id',
+            'qualifier_id',
             'rateable_id'
         );
 
@@ -37,7 +37,7 @@ trait CanRate
             ->withTimestamps()
             ->withPivot('rateable_type', 'score', 'approved_at')
             ->wherePivot('rateable_type', $modelClass)
-            ->wherePivot('rater_type', $this->getMorphClass());
+            ->wherePivot('qualifier_type', $this->getMorphClass());
 
         return $morphToMany;
     }

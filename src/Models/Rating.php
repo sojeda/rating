@@ -22,7 +22,7 @@ class Rating extends Pivot
         return $this->morphTo();
     }
 
-    public function rater()
+    public function qualifier()
     {
         return $this->morphTo();
     }

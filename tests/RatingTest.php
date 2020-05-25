@@ -4,6 +4,8 @@ namespace Laraveles\Rating\Test;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
 use Laraveles\Rating\Events\ModelRated;
 use Laraveles\Rating\Events\ModelUnrated;
@@ -167,6 +169,13 @@ class RatingTest extends TestCase
         $user->rate($page, 15);
     }
 
+    public function test_invalid_score_exception()
+    {
+        $exception = new InvalidScoreRating();
+        $this->assertInstanceOf(\Exception::class, $exception);
+        $this->assertInstanceOf(JsonResponse::class, $exception->render());
+    }
+
     public function test_rate_other_model()
     {
         $page = factory(Page::class)->create();
@@ -186,24 +195,24 @@ class RatingTest extends TestCase
         $this->assertFalse($page->hasRated($user3));
 
         $this->assertEquals(0, $page->ratings()->count());
-        $this->assertEquals(0, $page->raters()->count());
+        $this->assertEquals(0, $page->qualifiers()->count());
         $this->assertEquals(0, $page->ratings(User::class)->count());
-        $this->assertEquals(3, $page->raters(User::class)->count());
+        $this->assertEquals(3, $page->qualifiers(User::class)->count());
 
         $this->assertEquals(0, $user->ratings()->count());
-        $this->assertEquals(0, $user->raters()->count());
+        $this->assertEquals(0, $user->qualifiers()->count());
         $this->assertEquals(1, $user->ratings(Page::class)->count());
-        $this->assertEquals(0, $user->raters(Page::class)->count());
+        $this->assertEquals(0, $user->qualifiers(Page::class)->count());
 
         $this->assertEquals(0, $user2->ratings()->count());
-        $this->assertEquals(0, $user2->raters()->count());
+        $this->assertEquals(0, $user2->qualifiers()->count());
         $this->assertEquals(1, $user2->ratings(Page::class)->count());
-        $this->assertEquals(0, $user2->raters(Page::class)->count());
+        $this->assertEquals(0, $user2->qualifiers(Page::class)->count());
 
         $this->assertEquals(0, $user3->ratings()->count());
-        $this->assertEquals(0, $user3->raters()->count());
+        $this->assertEquals(0, $user3->qualifiers()->count());
         $this->assertEquals(1, $user3->ratings(Page::class)->count());
-        $this->assertEquals(0, $user3->raters(Page::class)->count());
+        $this->assertEquals(0, $user3->qualifiers(Page::class)->count());
     }
 
     public function test_average_rating_with_required_approval()
@@ -325,7 +334,7 @@ class RatingTest extends TestCase
         $rating = Rating::first();
 
         $this->assertInstanceOf(Page::class, $rating->rateable()->first());
-        $this->assertInstanceOf(User::class, $rating->rater()->first());
+        $this->assertInstanceOf(User::class, $rating->qualifier()->first());
     }
 
     public function test_get_approved_rateables_models_from_qualifer()

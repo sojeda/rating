@@ -15,8 +15,8 @@ class Ratings extends Migration
             $table->unsignedBigInteger('rateable_id');
             $table->string('rateable_type');
 
-            $table->integer('rater_id')->nullable();
-            $table->string('rater_type')->nullable();
+            $table->integer('qualifier_id')->nullable();
+            $table->string('qualifier_type')->nullable();
 
             $table->float('score', 9, 2);
             $table->text('comments')->nullable();
