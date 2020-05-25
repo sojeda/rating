@@ -110,8 +110,8 @@ $user->averageRating(User::class); // 8.00, it is equivalent
 
 The relationships are based on this too:
 ```php
-$page->raters()->get(); // Pages that have rated this page
-$page->raters(User::class)->get(); // Users that have rated this page
+$page->qualifiers()->get(); // Pages that have rated this page
+$page->qualifiers(User::class)->get(); // Users that have rated this page
 
 $user->ratings()->get(); // Users that this user has rated
 $user->ratings(Page::class)->get(); // Pages that this user has rated
