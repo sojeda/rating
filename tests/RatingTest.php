@@ -5,7 +5,6 @@ namespace Laraveles\Rating\Test;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
 use Laraveles\Rating\Events\ModelRated;
 use Laraveles\Rating\Events\ModelUnrated;
