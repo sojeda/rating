@@ -6,6 +6,14 @@ use Exception;
 
 class InvalidScoreRating extends Exception
 {
+    public function __construct()
+    {
+        parent::__construct(trans('rating::rating.invalidScore', [
+            'from' => config('rating.from'),
+            'to' => config('rating.to'),
+        ]));
+    }
+
     public function render()
     {
         return response()->json([

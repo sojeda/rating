@@ -59,10 +59,7 @@ trait CanRate
         $to = config('rating.to');
 
         if ($rate < $from || $rate > $to) {
-            throw new InvalidScoreRating(trans('rating::invalidScore', [
-                'from' => $from,
-                'to' => $to,
-            ]));
+            throw new InvalidScoreRating();
         }
 
         $this->ratings($model)->attach($model->getKey(), [

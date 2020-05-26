@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'invalidScore' => 'The score must be between :min and :max.',
+    'invalidScore' => 'El valor debe estar entre :from y :to',
 ];

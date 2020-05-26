@@ -173,6 +173,7 @@ class RatingTest extends TestCase
         $exception = new InvalidScoreRating();
         $this->assertInstanceOf(\Exception::class, $exception);
         $this->assertInstanceOf(JsonResponse::class, $exception->render());
+        $this->assertEquals('El valor debe estar entre 1 y 10', $exception->getMessage());
     }
 
     public function test_rate_other_model()
