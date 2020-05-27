@@ -46,7 +46,9 @@ class RatingTest extends TestCase
         $this->assertEquals(1, $page->qualifications()->count());
 
         Event::assertDispatched(ModelRated::class, function (ModelRated $event) use ($page, $user) {
-            return $event->getRateable()->getKey() === $page->id && $user->id === $event->getQualifier()->id;
+            return $event->getRateable()->getKey() === $page->id
+                && $user->id === $event->getQualifier()->id
+                && $event->getScore() === 5.0;
         });
     }
 
