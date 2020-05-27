@@ -45,8 +45,8 @@ class RatingTest extends TestCase
         $this->assertTrue($result);
         $this->assertEquals(1, $page->qualifications()->count());
 
-        Event::assertDispatched(ModelRated::class, function (ModelRated $event) use ($page) {
-            return $event->getModel()->getKey() === $page->id;
+        Event::assertDispatched(ModelRated::class, function (ModelRated $event) use ($page, $user) {
+            return $event->getRateable()->getKey() === $page->id && $user->id === $event->getQualifier()->id;
         });
     }
 
@@ -85,8 +85,8 @@ class RatingTest extends TestCase
         $this->assertIsBool($result);
         $this->assertTrue($result);
 
-        Event::assertDispatched(ModelUnrated::class, function (ModelUnrated $event) use ($page) {
-            return $event->getModel()->getKey() === $page->id;
+        Event::assertDispatched(ModelUnrated::class, function (ModelUnrated $event) use ($page, $user) {
+            return $event->getRateable()->getKey() === $page->id && $event->getQualifier()->id === $user->id ;
         });
     }
 

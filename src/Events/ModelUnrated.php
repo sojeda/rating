@@ -4,21 +4,36 @@ namespace Laraveles\Rating\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Laraveles\Rating\Contracts\Qualifier;
 use Laraveles\Rating\Contracts\Rateable;
 
 class ModelUnrated
 {
     use Dispatchable, SerializesModels;
 
-    private Rateable $model;
+    private Rateable $rateable;
+    /** @var Qualifier */
+    private Qualifier $qualifier;
 
-    public function __construct(Rateable $model)
+    public function __construct(Qualifier $qualifier, Rateable $rateable)
     {
-        $this->model = $model;
+        $this->rateable = $rateable;
+        $this->qualifier = $qualifier;
     }
 
-    public function getModel(): Rateable
+    /**
+     * @return Rateable
+     */
+    public function getRateable(): Rateable
     {
-        return $this->model;
+        return $this->rateable;
+    }
+
+    /**
+     * @return Qualifier
+     */
+    public function getQualifier(): Qualifier
+    {
+        return $this->qualifier;
     }
 }

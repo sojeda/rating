@@ -44,12 +44,12 @@ trait CanRate
 
     /**
      * @param Rateable $model
-     * @param float $rate
+     * @param float $score
      * @param string|null $comments
      * @return bool
      * @throws \Exception
      */
-    public function rate(Rateable $model, float $rate, string $comments = null): bool
+    public function rate(Rateable $model, float $score, string $comments = null): bool
     {
         if ($this->hasRated($model)) {
             return false;
@@ -58,18 +58,18 @@ trait CanRate
         $from = config('rating.from');
         $to = config('rating.to');
 
-        if ($rate < $from || $rate > $to) {
+        if ($score < $from || $score > $to) {
             throw new InvalidScoreRating();
         }
 
         $this->ratings($model)->attach($model->getKey(), [
-            'score' => $rate,
+            'score' => $score,
             'comments' => $comments,
             'approved_at' => config('rating.required_approval', false) ? null : Carbon::now(),
             'rateable_type' => get_class($model),
         ]);
 
-        event(new ModelRated($model));
+        event(new ModelRated($this, $model, $score));
 
         return true;
     }
@@ -86,7 +86,7 @@ trait CanRate
 
         $this->ratings($model->getMorphClass())->detach($model->getKey());
 
-        event(new ModelUnrated($model));
+        event(new ModelUnrated($this, $model));
 
         return true;
     }
