@@ -86,7 +86,7 @@ class RatingTest extends TestCase
         $this->assertTrue($result);
 
         Event::assertDispatched(ModelUnrated::class, function (ModelUnrated $event) use ($page, $user) {
-            return $event->getRateable()->getKey() === $page->id && $event->getQualifier()->id === $user->id ;
+            return $event->getRateable()->getKey() === $page->id && $event->getQualifier()->id === $user->id;
         });
     }
 
