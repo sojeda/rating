@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Event;
 use Laraveles\Rating\Events\ModelRated;
 use Laraveles\Rating\Events\ModelUnrated;
-use Laraveles\Rating\Exception\InvalidScoreRating;
+use Laraveles\Rating\Exception\InvalidScore;
 use Laraveles\Rating\Models\Rating;
 use Laraveles\Rating\Test\Models\Page;
 use Laraveles\Rating\Test\Models\SimplePage;
@@ -160,7 +160,7 @@ class RatingTest extends TestCase
 
     public function test_rate_product_with_invalid_score()
     {
-        $this->expectException(InvalidScoreRating::class);
+        $this->expectException(InvalidScore::class);
 
         /** @var User $user */
         $user = factory(User::class)->create();
@@ -172,7 +172,7 @@ class RatingTest extends TestCase
 
     public function test_invalid_score_exception()
     {
-        $exception = new InvalidScoreRating();
+        $exception = new InvalidScore();
         $this->assertInstanceOf(\Exception::class, $exception);
         $this->assertInstanceOf(JsonResponse::class, $exception->render());
         $this->assertEquals('El valor debe estar entre 1 y 10', $exception->getMessage());

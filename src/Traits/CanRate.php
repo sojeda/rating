@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 use Laraveles\Rating\Contracts\Rateable;
 use Laraveles\Rating\Events\ModelRated;
 use Laraveles\Rating\Events\ModelUnrated;
-use Laraveles\Rating\Exception\InvalidScoreRating;
+use Laraveles\Rating\Exception\InvalidScore;
 
 trait CanRate
 {
@@ -59,7 +59,7 @@ trait CanRate
         $to = config('rating.to');
 
         if ($score < $from || $score > $to) {
-            throw new InvalidScoreRating();
+            throw new InvalidScore();
         }
 
         $this->ratings($model)->attach($model->getKey(), [

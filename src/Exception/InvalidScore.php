@@ -4,7 +4,7 @@ namespace Laraveles\Rating\Exception;
 
 use Exception;
 
-class InvalidScoreRating extends Exception
+class InvalidScore extends Exception
 {
     public function __construct()
     {
